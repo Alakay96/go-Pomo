@@ -18,7 +18,7 @@ func DefaultConfig() Config {
 
 func TestConfig() Config {
 	return Config{
-		workDuration:     2,
+		workDuration:     1,
 		restDuration:     1,
 		longRestDuration: 2,
 		rounds:           3,
