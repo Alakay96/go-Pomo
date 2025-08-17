@@ -21,6 +21,6 @@ func TestConfig() Config {
 		workDuration:     1,
 		restDuration:     1,
 		longRestDuration: 2,
-		rounds:           3,
+		rounds:           1,
 	}
 }
