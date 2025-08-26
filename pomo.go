@@ -2,13 +2,32 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 func main() {
+	var configSelect string
+	var configMode func() Config
 
 	fmt.Println("Pomo timer")
 
-	config := TestConfig()
+	fmt.Println("Which config to use:")
+	fmt.Println("D - default")
+	fmt.Println("C - custom")
+	fmt.Println("T - test")
+	fmt.Scanln(&configSelect)
+	configSelect = strings.ToUpper(configSelect)
+
+	switch configSelect {
+	case "T":
+		configMode = TestConfig
+	case "D":
+		configMode = DefaultConfig
+	case "C":
+		configMode = CustomConfig
+	}
+
+	config := configMode()
 
 	fmt.Printf("Config: %+v\n", config)
 
