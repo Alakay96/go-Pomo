@@ -53,13 +53,17 @@ func intCheck(input string) int {
 		reader := bufio.NewReader(os.Stdin)
 		line, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Println("Invalid input. Please enter a valid number.")
+			fmt.Println("Read error. Please try again.")
 			continue
 		}
 		line = strings.TrimSpace(line)
 		value, err = strconv.Atoi(line)
 		if err != nil {
 			fmt.Println("Invalid input. Please enter a valid number.")
+			continue
+		}
+		if value <= 0 {
+			fmt.Println("Please enter a number greater than 0.")
 			continue
 		}
 		return value
