@@ -1,12 +1,6 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strconv"
-	"strings"
-)
+import "fmt"
 
 type Config struct {
 	workDuration     int
@@ -34,38 +28,19 @@ func TestConfig() Config {
 }
 
 func CustomConfig() Config {
-	work := intCheck("Work duration:	")
-	rest := intCheck("Rest duration:	")
-	longRest := intCheck("Long rest duration:	")
-	rounds := intCheck("Number of rounds:	")
+	var work, rest, longRest, rounds int
+	fmt.Println("Work duration in minutes: ")
+	fmt.Scanln(&work)
+	fmt.Println("Rest duration in minutes: ")
+	fmt.Scanln(&rest)
+	fmt.Println("Long rest duration in minutes: ")
+	fmt.Scanln(&longRest)
+	fmt.Println("Number of rounds: ")
+	fmt.Scanln(&rounds)
 	return Config{
 		workDuration:     work,
 		restDuration:     rest,
 		longRestDuration: longRest,
 		rounds:           rounds,
-	}
-}
-
-func intCheck(input string) int {
-	var value int
-	for {
-		fmt.Println(input)
-		reader := bufio.NewReader(os.Stdin)
-		line, err := reader.ReadString('\n')
-		if err != nil {
-			fmt.Println("Read error. Please try again.")
-			continue
-		}
-		line = strings.TrimSpace(line)
-		value, err = strconv.Atoi(line)
-		if err != nil {
-			fmt.Println("Invalid input. Please enter a valid number.")
-			continue
-		}
-		if value <= 0 {
-			fmt.Println("Please enter a number greater than 0.")
-			continue
-		}
-		return value
 	}
 }
