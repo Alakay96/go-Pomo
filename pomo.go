@@ -1,8 +1,11 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"strings"
+
+	_ "github.com/glebarez/go-sqlite"
 )
 
 type SessionStats struct {
@@ -13,6 +16,25 @@ type SessionStats struct {
 }
 
 func main() {
+
+	db, err := sql.Open("sqlite", "./pomo.db")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	defer db.Close()
+
+	fmt.Println("Connected to DB")
+
+	_, err = CreateTable(db)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println("Table created")
+
 	currentSession := SessionStats{0, 0}
 
 	var configSelect string
@@ -62,4 +84,33 @@ func main() {
 	Total work sessions: %d
 	Total rest sessions: %d`,
 		currentSession.totalWorkSessions, currentSession.totalRestSessions)
+
+	statsID, err := Insert(db, &currentSession)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("Stats ID: %d\n", statsID)
+}
+
+func CreateTable(db *sql.DB) (sql.Result, error) {
+	sql := `CREATE TABLE IF NOT EXISTS stats (
+	id INTEGER PRIMARY KEY,
+	rest INTEGER NOT NULL,
+	work INTEGER NOT NULL
+	);`
+
+	return db.Exec(sql)
+}
+
+func Insert(db *sql.DB, s *SessionStats) (int64, error) {
+	sql := `INSERT INTO stats (work, rest)
+	VALUES (?, ?)`
+
+	result, err := db.Exec(sql, s.totalWorkSessions, s.totalRestSessions)
+	if err != nil {
+		return 0, err
+	}
+
+	return result.LastInsertId()
 }
